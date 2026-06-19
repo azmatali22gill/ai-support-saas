@@ -1,65 +1,67 @@
-import Image from "next/image";
+import Link from "next/link";
 
 export default function Home() {
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="min-h-screen bg-slate-900 text-white font-sans flex flex-col justify-between">
+      {/* Navbar Section Layout */}
+      <header className="max-w-6xl mx-auto w-full px-6 py-6 flex justify-between items-center border-b border-slate-800">
+        <div className="flex items-center gap-2">
+          <div className="w-4 h-4 bg-blue-500 rounded-full animate-pulse" />
+          <span className="font-bold text-lg tracking-tight">SupportAI.io</span>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+        <span className="text-xs bg-slate-800 text-slate-400 font-mono px-2.5 py-1 rounded-md border border-slate-700">
+          v1.0 Production Ready
+        </span>
+      </header>
+
+      {/* Hero Body Content Main Pitch Layout */}
+      <main className="max-w-4xl mx-auto text-center px-6 py-20 flex flex-col items-center gap-6">
+        <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight max-w-3xl leading-tight">
+          Multi-Tenant <span className="text-blue-500">AI-Driven</span> Customer
+          Support Infrastructure
+        </h1>
+        <p className="text-slate-400 text-base sm:text-lg max-w-xl leading-relaxed">
+          A production-grade SaaS built with Next.js App Router, MongoDB Atlas
+          Vector Search, and an embeddable widget system.
+        </p>
+
+        {/* Informative Grid Details Boxes */}
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full my-8 text-left">
+          <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-800">
+            <h3 className="text-sm font-bold text-blue-400 mb-1">
+              Vector RAG Architecture
+            </h3>
+            <p className="text-xs text-slate-400">
+              Processes text documents into mathematical chunks for semantic
+              matching using MongoDB Atlas Search Indices.
+            </p>
+          </div>
+          <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-800">
+            <h3 className="text-sm font-bold text-blue-400 mb-1">
+              Cross-Origin Injection
+            </h3>
+            <p className="text-xs text-slate-400">
+              Lightweight Vanilla JS script loads a sandboxed cross-domain
+              customer support conversation interface seamlessly.
+            </p>
+          </div>
+          <div className="p-4 rounded-xl bg-slate-800/50 border border-slate-800">
+            <h3 className="text-sm font-bold text-blue-400 mb-1">
+              Multi-Tenant Inbox
+            </h3>
+            <p className="text-xs text-slate-400">
+              An auto-refreshing dashboard built for customer support agents to
+              monitor conversation transcripts in real time.
+            </p>
+          </div>
         </div>
       </main>
+
+      {/* Footer System Details */}
+      <footer className="border-t border-slate-800 py-6 text-center text-xs text-slate-500">
+        Developed as a high-performance Full Stack showcase project repository
+        portfolio item.
+      </footer>
     </div>
   );
 }
