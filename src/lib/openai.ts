@@ -2,7 +2,7 @@ import OpenAI from "openai";
 
 // Initialize OpenAI shell client (keeps your imports in other routes from breaking)
 export const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY || "dummy-key-for-local-testing",
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 /**
