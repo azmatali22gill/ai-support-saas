@@ -1,7 +1,9 @@
 "use client";
 
+export const dynamic = "force-dynamic"; // Forces Next.js to render this page dynamically on Vercel
+
 import { useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 
 interface Message {
   sender: "user" | "ai" | "agent";
@@ -16,7 +18,7 @@ interface ChatSession {
   createdAt: string;
 }
 
-export default function DashboardChats() {
+function ChatsDashboardContent() {
   const searchParams = useSearchParams();
   const orgId = searchParams.get("orgId");
 
@@ -26,39 +28,38 @@ export default function DashboardChats() {
   );
   const [loading, setLoading] = useState(true);
 
-  // Fetch all chat logs from the database
-  const fetchChats = async () => {
-    if (!orgId) return;
-    try {
-      const res = await fetch(`/api/dashboard/chats?orgId=${orgId}`);
-      const data = await res.json();
-      if (data.success) {
-        setSessions(data.sessions);
-        // Sync active screen if a session is currently selected
-        if (selectedSession) {
-          const updated = data.sessions.find(
-            (s: ChatSession) => s._id === selectedSession._id,
-          );
-          if (updated) setSelectedSession(updated);
-        }
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
+    if (!orgId) return;
+
+    const fetchChats = async () => {
+      try {
+        const res = await fetch(`/api/dashboard/chats?orgId=${orgId}`);
+        const data = await res.json();
+        if (data.success) {
+          setSessions(data.sessions);
+          setSelectedSession((currentSelected) => {
+            if (!currentSelected) return null;
+            const updated = data.sessions.find(
+              (s: ChatSession) => s._id === currentSelected._id,
+            );
+            return updated || currentSelected;
+          });
+        }
+      } catch (err) {
+        console.error("Error fetching chats:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
     fetchChats();
-    // Poll the database every 5 seconds to instantly stream new messages coming from the widget
     const interval = setInterval(fetchChats, 5000);
     return () => clearInterval(interval);
-  }, [orgId, selectedSession]);
+  }, [orgId]);
 
   if (!orgId) {
     return (
-      <div className="p-8 text-red-500">
+      <div className="p-8 text-red-500 font-medium">
         Error: Missing orgId parameter in URL.
       </div>
     );
@@ -66,7 +67,7 @@ export default function DashboardChats() {
 
   return (
     <div className="flex h-screen bg-gray-100 font-sans text-gray-800">
-      {/* Left Column: Conversations Sidebar List */}
+      {/* Left Column: Chat List Sidebar */}
       <div className="w-1/3 bg-white border-r border-gray-200 flex flex-col">
         <div className="p-4 border-b border-gray-200 bg-gray-50">
           <h1 className="text-lg font-bold text-gray-900">
@@ -76,7 +77,6 @@ export default function DashboardChats() {
             Auto-refreshing live user sessions
           </p>
         </div>
-
         <div className="flex-1 overflow-y-auto divide-y divide-gray-100">
           {loading && sessions.length === 0 ? (
             <div className="p-4 text-center text-sm text-gray-400">
@@ -116,7 +116,7 @@ export default function DashboardChats() {
         </div>
       </div>
 
-      {/* Right Column: Live Chat History Window View */}
+      {/* Right Column: Message History Area */}
       <div className="flex-1 flex flex-col bg-gray-50">
         {selectedSession ? (
           <>
@@ -128,7 +128,6 @@ export default function DashboardChats() {
                 Session ID: {selectedSession._id}
               </p>
             </div>
-
             <div className="flex-1 overflow-y-auto p-6 space-y-4">
               {selectedSession.messages.map((msg, index) => (
                 <div
@@ -160,7 +159,7 @@ export default function DashboardChats() {
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
-              stroke-width="1.5"
+              strokeWidth="1.5"
               stroke-linecap="round"
               stroke-linejoin="round"
               className="mb-2 text-gray-300"
@@ -174,5 +173,19 @@ export default function DashboardChats() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function DashboardChats() {
+  return (
+    <Suspense
+      fallback={
+        <div className="p-8 text-center text-sm text-gray-500 font-sans">
+          Loading dashboard UI...
+        </div>
+      }
+    >
+      <ChatsDashboardContent />
+    </Suspense>
   );
 }
